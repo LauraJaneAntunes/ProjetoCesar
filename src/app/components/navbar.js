@@ -22,8 +22,24 @@ export function Navbar() {
   }
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "background.paper", borderBottom: "1px solid", borderColor: "divider" }}>
-      <Toolbar sx={{ justifyContent: "space-between", maxWidth: "1200px", mx: "auto", width: "100%", px: 2 }}>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "background.paper",
+        borderBottom: "1px solid",
+        borderColor: "divider",
+      }}
+    >
+      <Toolbar
+        sx={{
+          justifyContent: "space-between",
+          maxWidth: "1200px",
+          mx: "auto",
+          width: "100%",
+          px: 2,
+          flexWrap: "wrap", // permite quebra se necessário
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <LockRounded sx={{ mr: 1, color: "primary.main" }} />
           <Typography variant="h6" component="div">
@@ -32,15 +48,25 @@ export function Navbar() {
         </Box>
 
         {pathname !== "/" && (
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5, // define espaço entre os botões
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
             <Button
               component={Link}
               href="/encrypt"
               color={pathname === "/encrypt" ? "primary" : "inherit"}
-              sx={{ mr: 2 }}
             >
               <VpnKeyRounded sx={{ mr: 1 }} />
-              <Typography variant="subtitle2" sx={{ display: { xs: "none", sm: "inline" } }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ display: { xs: "none", sm: "inline" } }}
+              >
                 Criptografar
               </Typography>
             </Button>
@@ -49,10 +75,12 @@ export function Navbar() {
               component={Link}
               href="/decrypt"
               color={pathname === "/decrypt" ? "primary" : "inherit"}
-              sx={{ mr: 2 }}
             >
               <LockOpenRounded sx={{ mr: 1 }} />
-              <Typography variant="subtitle2" sx={{ display: { xs: "none", sm: "inline" } }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ display: { xs: "none", sm: "inline" } }}
+              >
                 Descriptografar
               </Typography>
             </Button>
@@ -62,10 +90,12 @@ export function Navbar() {
               color="primary"
               size="small"
               onClick={handleLogout}
-              sx={{ ml: 2 }}
             >
               <LogoutRounded sx={{ mr: 1 }} />
-              <Typography variant="subtitle2" sx={{ display: { xs: "none", sm: "inline" } }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ display: { xs: "none", sm: "inline" } }}
+              >
                 Sair
               </Typography>
             </Button>

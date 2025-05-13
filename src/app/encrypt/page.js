@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AppBar, Toolbar, Button, TextField, Container, Card, CardContent, Typography, Slider, Snackbar, Alert } from "@mui/material";
+import { Button, TextField, Container, Card, CardContent, Typography, Slider, Snackbar, Alert } from "@mui/material";
 import { Lock, Key, ContentCopy, ArrowForward } from "@mui/icons-material";
 import { Navbar } from "../components/navbar";
 import { encrypt, generateHash } from "../libs/caesar";
-import { saveHash } from "../libs/db";
 
 export default function EncryptPage() {
   const router = useRouter();
@@ -29,17 +28,28 @@ export default function EncryptPage() {
 
   const handleEncrypt = async () => {
     if (!message.trim()) return;
-
+  
     setLoading(true);
-
+  
     try {
       const encryptedText = encrypt(message, shift);
       setEncrypted(encryptedText);
-
+  
       const newHash = generateHash();
       setHash(newHash);
-
-      await saveHash(newHash, shift);
+  
+      const response = await fetch("/api/save-hash", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ hash: newHash, shift }),
+      });
+  
+      const data = await response.json();
+      if (!data.success) {
+        console.error("Erro ao salvar no MongoDB");
+      }
     } catch (error) {
       console.error("Erro na criptografia:", error);
     } finally {

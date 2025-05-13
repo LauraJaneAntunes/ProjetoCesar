@@ -4,10 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Conectar ao MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGO_URI);
 
 // Definição do Schema e Modelo
 const hashSchema = new mongoose.Schema({
