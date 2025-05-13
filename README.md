@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 Segurança da Informação - Projeto
 
-## Getting Started
+## 👤 Integrantes
 
-First, run the development server:
+- Laura Jane Antunes  
+- Mariana A. K. Hirata
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📖 Descrição
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Este projeto explora conceitos e práticas essenciais de **segurança da informação**, com o objetivo de implementar soluções eficazes para proteger dados e sistemas.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🗂️ Estrutura do Projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **`/app`**: Diretório principal para rotas no novo sistema de roteamento do Next.js (App Router). Contém páginas e layouts.
+- **`/components`**: Onde ficam os componentes reutilizáveis da interface.
+- **`/hooks`**: Hook personalizado para exibir notificações do tipo toast (mensagens rápidas que aparecem no canto da tela).
+- **`/lib`**: Autenticação, implementação da lógica da cifra de César, conexão com o banco de dados e utilidades genéricas.
 
-## Learn More
+💡 **Dica**: Mantenha seus sistemas seguros e atualizados! 🔒
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🚧 Como rodar o projeto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/seu-repo.git
+   ```
 
-## Deploy on Vercel
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Rode o projeto:
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Acesse:
+   ```
+   http://localhost:3000
+   ```
+
+---
+
+## 🎯 Funcionalidades
+
+- 🔐 Criptografia de mensagens com cifra de César
+- 🔑 Sistema de autenticação de usuários
+- 📢 Exibição de mensagens de alerta/toast
+- 🧩 Layout responsivo com navegação intuitiva
+- 🗝 Autenticação via JWT
+
+---
+
+## 🔒 Conceitos de Segurança da Informação
+
+- **Confidencialidade**: uso da cifra de César para proteger dados sensíveis  
+- **Autenticação e controle de acesso**: módulo `auth.ts`  
+- **Boas práticas de desenvolvimento seguro**  
+- **Gerenciamento de sessões e dados**
+
+---
+
+## 📄 Licença
+
+Este projeto está licenciado sob a **Licença MIT**.  
+Sinta-se livre para usar, modificar e compartilhar com atribuição.
