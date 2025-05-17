@@ -1,4 +1,4 @@
-// src/api/save-hash/route.js
+//src\app\api\save-hash\route.js
 import { saveHash } from "@/app/libs/db";
 
 export async function POST(req) {

@@ -1,37 +1,27 @@
-// Funções simples de autenticação - Em um app real, você usaria um sistema adequado
-import { cookies } from "next/headers";
+// src/app/libs/auth.js
+import bcrypt from "bcryptjs";
+import mongoose from "mongoose";
 
-// Mock de banco de usuários - Em um app real, isso estaria em um banco de dados
-const users = [
-  { username: "admin", password: "password", id: "1" },
-  { username: "user", password: "password", id: "2" },
-];
+const UserSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  password: { type: String, required: true },
+});
 
-// Função de login
-export function login(username, password) {
-  const user = users.find((u) => u.username === username && u.password === password);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
-  if (user) {
-    return { id: user.id, username: user.username };
-  }
-
-  return null;
+async function connectToDB() {
+  if (mongoose.connection.readyState >= 1) return;
+  await mongoose.connect(process.env.MONGO_URI);
 }
 
-// Função para obter o usuário a partir dos cookies
-export function getUser() {
-  const userCookie = cookies().get("user")?.value;
+export async function login(username, password) {
+  await connectToDB();
 
-  if (!userCookie) return null;
+  const user = await User.findOne({ username });
+  if (!user) return null;
 
-  try {
-    return JSON.parse(userCookie);
-  } catch (error) {
-    return null;
-  }
-}
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (!passwordMatch) return null;
 
-// Função para verificar se o usuário está autenticado
-export function isAuthenticated() {
-  return getUser() !== null;
+  return user;
 }

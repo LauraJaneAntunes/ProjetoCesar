@@ -1,3 +1,4 @@
+//src\app\encrypt\page.js
 "use client";
 
 import { useState, useEffect } from "react";
@@ -107,7 +108,7 @@ export default function EncryptPage() {
           </Button>
 
           {encrypted && (
-            <Card sx={{ mt: 3, p: 2, bgcolor: "secondary.light" }}>
+            <Card sx={{ mt: 3, p: 2, bgcolor: "primary" }}>
               <Typography variant="body1" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Lock /> Mensagem Criptografada
               </Typography>

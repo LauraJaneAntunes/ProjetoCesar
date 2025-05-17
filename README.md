@@ -16,66 +16,42 @@ Este projeto explora conceitos e práticas essenciais de **segurança da informa
 - **`/hooks`**: Hook personalizado para exibir notificações do tipo toast (mensagens rápidas que aparecem no canto da tela).
 - **`/lib`**: Autenticação, implementação da lógica da cifra de César, conexão com o banco de dados e utilidades genéricas.
 
-PROJETO-CESAR/
-
-├── .next/                     # Arquivos gerados pelo Next.js
-
-├── node_modules/              # Dependências do projeto
-
-├── public/                    # Arquivos públicos (acessíveis diretamente)
-
-├── src/
-
-│   ├── api/
-
-│   │   └── save-hash/
-
-│   │       └── route.js       # Rota da API para salvar hash
-
-│   ├── app/
-
-│   │   ├── components/
-
-│   │   │   └── navbar.js      # Componente de navegação
-
-│   │   ├── decrypt/
-
-│   │   │   └── page.js        # Página de descriptografar
-
-│   │   ├── encrypt/
-
-│   │   │   └── page.js        # Página de criptografar
-
-│   │   ├── libs/
-
-│   │   │   ├── auth.js        # Autenticação (cookies, etc)
-
-│   │   │   ├── caesar.js      # Funções da cifra de César
-
-│   │   │   └── db.js          # Conexão e operações com MongoDB
-
-│   │   ├── favicon.ico
-
-│   │   ├── globals.css        # Estilos globais
-
-│   │   ├── layout.js          # Layout principal da aplicação
-
-│   │   └── page.js            # Página inicial
-
-├── .env                       # Variáveis de ambiente (como MONGO_URI)
-
+PROJETOCESAR/
+├── .next/
+├── node_modules/
+├── public/
+└── src/
+    └── app/
+        ├── api/
+        │   └── auth/
+        │       └── register/
+        │           └── route.js
+        │   └── login/
+        │           └── route.js
+        │   └── save-hash/
+        │       └── route.js
+        └── components/
+            └── navbar.js
+        └── decrypt/
+            └── page.js
+        └── encrypt/
+            └── page.js
+        └── libs/
+            ├── auth.js
+            ├── caesar.js
+            └── db.js
+    ├── favicon.ico
+    ├── globals.css
+    ├── layout.js
+    └── page.js
+├── .env
+├── .env.example
 ├── .gitignore
-
 ├── jsconfig.json
-
 ├── next.config.mjs
-
-├── package.json
-
 ├── package-lock.json
-
+├── package.json
 ├── postcss.config.mjs
-
 └── README.md
 
 💡 **Dica**: Mantenha seus sistemas seguros e atualizados! 🔒
