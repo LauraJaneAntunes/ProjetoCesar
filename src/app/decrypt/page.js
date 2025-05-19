@@ -7,7 +7,6 @@ import { Navbar } from "../components/navbar";
 import { Button, TextField, Container, Card, CardContent, Typography, Snackbar, Alert } from "@mui/material";
 import { LockOpen, ContentCopy, CheckCircle, Warning } from "@mui/icons-material";
 import { decrypt } from "../libs/caesar";
-import { getHashRecord, markHashAsUsed } from "../libs/db";
 
 export default function DecryptPage() {
   const router = useRouter();
@@ -21,9 +20,10 @@ export default function DecryptPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const hasUserCookie = document.cookie.includes("user=");
-    if (!hasUserCookie) {
-      router.push("/");
+    if (!token && !hasUserCookie) {
+      router.push("/login");
     } else {
       setIsAuthenticated(true);
     }
@@ -41,25 +41,24 @@ export default function DecryptPage() {
     setDecrypted("");
 
     try {
-      const hashRecord = await getHashRecord(hash);
+      const response = await fetch("/api/use-hash", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ hash }),
+      });
 
-      if (!hashRecord) {
-        setError("Hash inválido. Verifique e tente novamente.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Erro ao buscar o hash.");
         setLoading(false);
         return;
       }
 
-      if (hashRecord.used) {
-        setError("Este hash já foi utilizado. Cada hash pode ser usado apenas uma vez.");
-        setLoading(false);
-        return;
-      }
-
-      const decryptedText = decrypt(encryptedMessage, hashRecord.shift);
+      const decryptedText = decrypt(encryptedMessage, data.shift);
       setDecrypted(decryptedText);
-
-      await markHashAsUsed(hash);
-
       setSuccess(true);
     } catch (error) {
       console.error("Erro na descriptografia:", error);
@@ -128,7 +127,7 @@ export default function DecryptPage() {
           </Button>
 
           {success && decrypted && (
-            <Card sx={{ mt: 3, p: 2, bgcolor: "secondary.light" }}>
+            <Card sx={{ mt: 3, p: 2, bgcolor: "primary" }}>
               <Typography variant="body1" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <CheckCircle /> Descriptografia concluída!
               </Typography>

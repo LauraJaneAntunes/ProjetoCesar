@@ -19,26 +19,30 @@ export default function EncryptPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const hasUserCookie = document.cookie.includes("user=");
-    if (!hasUserCookie) {
-      router.push("/");
+    if (!token && !hasUserCookie) {
+      router.push("/login");
     } else {
       setIsAuthenticated(true);
     }
-  }, [router]);
+  }, []);
 
   const handleEncrypt = async () => {
     if (!message.trim()) return;
-  
+
     setLoading(true);
-  
+
     try {
+      // Criptografa a mensagem localmente
       const encryptedText = encrypt(message, shift);
       setEncrypted(encryptedText);
-  
+
+      // Gera o hash localmente
       const newHash = generateHash();
       setHash(newHash);
-  
+
+      // Salva o hash e shift no backend, no endpoint save-hash
       const response = await fetch("/api/save-hash", {
         method: "POST",
         headers: {
@@ -46,13 +50,13 @@ export default function EncryptPage() {
         },
         body: JSON.stringify({ hash: newHash, shift }),
       });
-  
+
       const data = await response.json();
       if (!data.success) {
-        console.error("Erro ao salvar no MongoDB");
+        console.error("Erro ao salvar hash no MongoDB");
       }
     } catch (error) {
-      console.error("Erro na criptografia:", error);
+      console.error("Erro na criptografia ou no save-hash:", error);
     } finally {
       setLoading(false);
     }

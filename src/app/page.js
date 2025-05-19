@@ -37,7 +37,7 @@ export default function LoginPage() {
     }
 
     try {
-    const response = await fetch("/api  /login", {
+    const response = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -51,8 +51,9 @@ export default function LoginPage() {
       return;
     }
 
-    // 🔐 Salvar o token JWT no cookie (ou localStorage)
+    // Salvar o token JWT no cookie
     if (typeof window !== "undefined") {
+      localStorage.setItem("token", data.token);
       document.cookie = `token=${data.token}; path=/; max-age=3600`;
     }
 
@@ -199,9 +200,6 @@ export default function LoginPage() {
           </CardContent>
 
           <CardActions sx={{ flexDirection: 'column', pb: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              Use <strong>admin/password</strong> para acesso de demonstração ou
-            </Typography>
             <Button variant="text" size="small" onClick={handleOpenRegister}>
               Cadastre-se
             </Button>
