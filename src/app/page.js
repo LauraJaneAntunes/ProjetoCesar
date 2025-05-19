@@ -1,62 +1,98 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LockIcon from '@mui/icons-material/Lock';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { validationSchema } from "../app/libs/validationSchema";
+import LockIcon from "@mui/icons-material/Lock";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Navbar } from "./components/navbar";
-import { Button, TextField, Card, CardContent, CardActions, Typography, Box, IconButton, Alert, CardHeader, Modal, Fade, Backdrop, CircularProgress } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Card,
+  Container,
+  CardContent,
+  CardActions,
+  Typography,
+  Box,
+  IconButton,
+  Alert,
+  CardHeader,
+  Modal,
+  Fade,
+  Backdrop,
+  CircularProgress,
+} from "@mui/material";
 
-export default async function LoginPage() {
+function FormikTextField({ label, type = "text", name, showPasswordToggle, showPassword, setShowPassword }) {
+  return (
+    <Field name={name}>
+      {({ field, meta }) => (
+        <TextField
+          fullWidth
+          label={label}
+          type={showPasswordToggle ? (showPassword ? "text" : "password") : type}
+          {...field}
+          error={meta.touched && Boolean(meta.error)}
+          helperText={meta.touched && meta.error}
+          InputProps={{
+            endAdornment: showPasswordToggle ? (
+              <IconButton
+                onClick={() => setShowPassword(!showPassword)}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            ) : null,
+          }}
+        />
+      )}
+    </Field>
+  );
+}
+
+export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
 
-  const [regUsername, setRegUsername] = useState("");
-  const [regPassword, setRegPassword] = useState("");
   const [regShowPassword, setRegShowPassword] = useState(false);
   const [regError, setRegError] = useState("");
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
 
-  // Função para enviar os dados do login para o backend e salvar o token JWT no localStorage e cookie e redirecionar para a página de criptografia
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => setIsMounted(true), []);
+
+  const handleLoginSubmit = async (values) => {
     setLoading(true);
     setError("");
 
-    if (!username || !password) {
-      setError("Nome de usuário e senha são obrigatórios");
-      setLoading(false);
-      return;
-    }
-
     try {
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok || !data.success) {
-      setError(data.message || "Usuário ou senha inválidos");
-      setLoading(false);
-      return;
-    }
+      if (!response.ok || !data.success) {
+        setError(data.message || "Usuário ou senha inválidos");
+        setLoading(false);
+        return;
+      }
 
-    if (typeof window !== "undefined") {
-      localStorage.setItem("token", data.token);
-      document.cookie = `token=${data.token}; path=/; max-age=3600`;
-    }
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", data.token);
+        document.cookie = `token=${data.token}; path=/; max-age=3600`;
+      }
 
-    router.push("/encrypt");
+      router.push("/encrypt");
     } catch (err) {
       console.error(err);
       setError("Erro ao tentar logar");
@@ -65,35 +101,16 @@ export default async function LoginPage() {
     }
   };
 
-  // Modal - Abrem e fecham o modal de cadastro, limpando os estados no processo.
-  //Função para enviar cadastro, validar os dados e retornar um feedback ( erro ou sucesso)
-
-  const handleOpenRegister = () => {
-    setRegUsername("");
-    setRegPassword("");
-    setRegError("");
-    setRegSuccess(false);
-    setOpenRegister(true);
-  };
-
-  const handleCloseRegister = () => setOpenRegister(false);
-
-    e.preventDefault();
+  const handleRegisterSubmit = async (values, { resetForm }) => {
     setRegLoading(true);
     setRegError("");
     setRegSuccess(false);
-
-    if (!regUsername || !regPassword) {
-      setRegError("Nome de usuário e senha são obrigatórios");
-      setRegLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: regUsername, password: regPassword }),
+        body: JSON.stringify(values),
       });
 
       const data = await response.json();
@@ -106,9 +123,8 @@ export default async function LoginPage() {
 
       setRegSuccess(true);
       setRegLoading(false);
-      setTimeout(() => {
-        handleCloseRegister();
-      }, 2000);
+      resetForm();
+      setTimeout(() => setOpenRegister(false), 2000);
     } catch (error) {
       setRegError("Erro de conexão");
       setRegLoading(false);
@@ -116,35 +132,72 @@ export default async function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-gradient-to-br from-background to-muted">
+    <Box
+      component="main"
+      sx={{
+        maxWidth: 600,
+        width: "100%",
+        minHeight: "100vh",
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        pt: 8,
+        pb: 4,
+      }}
+    >
       <Navbar />
-      <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', p: 4 }}>
+
+      <Box
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          p: 4,
+        }}
+      >
         <Card
           sx={{
-            width: '100%',
+            width: "100%",
             maxWidth: 400,
             boxShadow: 3,
             borderRadius: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(10px)',
-            textAlign: 'center',
+            backdropFilter: "blur(10px)",
+            textAlign: "center",
             px: 3,
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-            <Box sx={{ width: 64, height: 64, borderRadius: '50%', bgcolor: 'primary.light', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <LockIcon sx={{ fontSize: 32, color: 'primary.main' }} />
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+            <Box
+              sx={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                bgcolor: "primary.light",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <LockIcon sx={{ fontSize: 32, color: "primary.main" }} />
             </Box>
           </Box>
 
           <CardHeader
             title={
-              <Typography variant="h5" align="center" sx={{ mt: 1}}>
+              <Typography variant="h5" align="center" sx={{ mt: 1 }}>
                 Bem-vindo!
               </Typography>
             }
             subheader={
-              <Typography variant="body2" align="center" color="text.secondary" sx={{ mt: 3}}>
+              <Typography
+                variant="body2"
+                align="center"
+                color="text.secondary"
+                sx={{ mt: 3 }}
+              >
                 Insira suas credenciais para acessar o sistema de criptografia
               </Typography>
             }
@@ -152,129 +205,108 @@ export default async function LoginPage() {
           />
 
           <CardContent>
-            {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                {error}
-              </Alert>
-            )}
+            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-            <form onSubmit={handleSubmit}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <TextField
-                  fullWidth
-                  id="username"
-                  label="Nome de usuário"
-                  placeholder="Insira seu nome de usuário"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  autoComplete="username"
-                />
+            <Formik
+              initialValues={{ username: "", password: "" }}
+              validationSchema={validationSchema}
+              onSubmit={handleLoginSubmit}
+            >
+              {() => (
+                <Form>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <FormikTextField label="Nome de usuário" name="username" />
+                    <FormikTextField
+                      label="Senha"
+                      name="password"
+                      showPasswordToggle={true}
+                      showPassword={showPassword}
+                      setShowPassword={setShowPassword}
+                    />
 
-                <TextField
-                  fullWidth
-                  id="password"
-                  label="Senha"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Insira sua senha"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  autoComplete="current-password"
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    ),
-                  }}
-                />
-
-                <Button type="submit" variant="contained" fullWidth disabled={loading}>
-                  {loading ? "Entrando..." : "Entrar"}
-                </Button>
-              </Box>
-            </form>
+                    <Button type="submit" variant="contained" fullWidth disabled={loading}>
+                      {loading ? "Entrando..." : "Entrar"}
+                    </Button>
+                  </Box>
+                </Form>
+              )}
+            </Formik>
           </CardContent>
 
-          <CardActions sx={{ flexDirection: 'column', pb: 2 }}>
-            <Button variant="text" size="small" onClick={handleOpenRegister}>
+          <CardActions sx={{ flexDirection: "column", pb: 2 }}>
+            <Button variant="text" size="small" onClick={() => setOpenRegister(true)}>
               Cadastre-se
             </Button>
           </CardActions>
         </Card>
       </Box>
 
-      <Modal
-        open={openRegister}
-        onClose={handleCloseRegister}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        slotProps={{
-          backdrop: {
-            timeout: 500,
-          },
-        }}
-      >
-        <Fade in={openRegister}>
-          <Box
-            component="form"
-            onSubmit={handleRegister}
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 350,
-              bgcolor: 'background.paper',
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-            }}
-          >
-            <Typography variant="h6" textAlign="center" gutterBottom>
-              Cadastro
-            </Typography>
-
-            {regError && <Alert severity="error">{regError}</Alert>}
-            {regSuccess && <Alert severity="success">Usuário cadastrado com sucesso!</Alert>}
-
-            <TextField
-              fullWidth
-              label="Nome de usuário"
-              value={regUsername}
-              onChange={(e) => setRegUsername(e.target.value)}
-              autoComplete="username"
-              required
-            />
-
-            <TextField
-              fullWidth
-              label="Senha"
-              type={regShowPassword ? 'text' : 'password'}
-              value={regPassword}
-              onChange={(e) => setRegPassword(e.target.value)}
-              autoComplete="new-password"
-              required
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={() => setRegShowPassword(!regShowPassword)} edge="end">
-                    {regShowPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
+      {isMounted && (
+        <Modal
+          open={openRegister}
+          onClose={() => setOpenRegister(false)}
+          closeAfterTransition
+          slots={{ backdrop: Backdrop }}
+          slotProps={{ backdrop: { timeout: 500 } }}
+        >
+          <Fade in={openRegister}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 350,
+                bgcolor: "background.paper",
+                borderRadius: 2,
+                boxShadow: 24,
+                p: 4,
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
               }}
-            />
+            >
+              <Typography variant="h6" textAlign="center" gutterBottom>
+                Cadastro
+              </Typography>
 
-            <Button type="submit" variant="contained" disabled={regLoading} fullWidth>
-              {regLoading ? <CircularProgress size={24} /> : "Cadastrar"}
-            </Button>
-          </Box>
-        </Fade>
-      </Modal>
+              {regError && <Alert severity="error">{regError}</Alert>}
+              {regSuccess && (
+                <Alert severity="success">Usuário cadastrado com sucesso!</Alert>
+              )}
 
-    </main>
+              <Formik
+                initialValues={{ username: "", password: "" }}
+                validationSchema={validationSchema}
+                onSubmit={handleRegisterSubmit}
+              >
+                {() => (
+                  <Form>
+                    <FormikTextField label="Nome de usuário" name="username" />
+                    <FormikTextField
+                      label="Senha"
+                      name="password"
+                      showPasswordToggle={true}
+                      showPassword={regShowPassword}
+                      setShowPassword={setRegShowPassword}
+                    />
+
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={regLoading}
+                      fullWidth
+                      sx={{ mt: 2 }}
+                    >
+                      {regLoading ? <CircularProgress size={24} /> : "Cadastrar"}
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </Box>
+          </Fade>
+        </Modal>
+      )}
+    </Box>
   );
-// Adicione o CSS necessário para o layout e estilo do componente
+}

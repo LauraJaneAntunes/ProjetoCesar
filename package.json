@@ -16,11 +16,13 @@
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "formik": "^2.4.6",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.2",
     "next": "15.3.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
