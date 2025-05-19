@@ -8,7 +8,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Navbar } from "./components/navbar";
 import { Button, TextField, Card, CardContent, CardActions, Typography, Box, IconButton, Alert, CardHeader, Modal, Fade, Backdrop, CircularProgress } from '@mui/material';
 
-export default function LoginPage() {
+export default async function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [regLoading, setRegLoading] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
 
-
+  // Função para enviar os dados do login para o backend e salvar o token JWT no localStorage e cookie e redirecionar para a página de criptografia
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -51,13 +51,11 @@ export default function LoginPage() {
       return;
     }
 
-    // Salvar o token JWT no cookie
     if (typeof window !== "undefined") {
       localStorage.setItem("token", data.token);
       document.cookie = `token=${data.token}; path=/; max-age=3600`;
     }
 
-    // Redireciona após login
     router.push("/encrypt");
     } catch (err) {
       console.error(err);
@@ -67,7 +65,9 @@ export default function LoginPage() {
     }
   };
 
-  // Modal
+  // Modal - Abrem e fecham o modal de cadastro, limpando os estados no processo.
+  //Função para enviar cadastro, validar os dados e retornar um feedback ( erro ou sucesso)
+
   const handleOpenRegister = () => {
     setRegUsername("");
     setRegPassword("");
@@ -78,8 +78,6 @@ export default function LoginPage() {
 
   const handleCloseRegister = () => setOpenRegister(false);
 
-  //Função para enviar cadastro
-  const handleRegister = async (e) => {
     e.preventDefault();
     setRegLoading(true);
     setRegError("");
@@ -141,12 +139,12 @@ export default function LoginPage() {
 
           <CardHeader
             title={
-              <Typography variant="h5" align="center" sx={{ mt: 1 }}>
-                Bem-vindo de volta
+              <Typography variant="h5" align="center" sx={{ mt: 1}}>
+                Bem-vindo!
               </Typography>
             }
             subheader={
-              <Typography variant="body2" align="center" color="text.secondary">
+              <Typography variant="body2" align="center" color="text.secondary" sx={{ mt: 3}}>
                 Insira suas credenciais para acessar o sistema de criptografia
               </Typography>
             }
@@ -279,4 +277,4 @@ export default function LoginPage() {
 
     </main>
   );
-}
+// Adicione o CSS necessário para o layout e estilo do componente
