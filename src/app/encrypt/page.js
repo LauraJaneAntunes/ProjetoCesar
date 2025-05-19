@@ -73,7 +73,7 @@ export default function EncryptPage() {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ pt: { xs: 10, sm: 12 }, }}>
       <Navbar />
       <Card sx={{ mt: 4, p: 3, boxShadow: 3 }}>
         <CardContent>

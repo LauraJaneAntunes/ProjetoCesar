@@ -27,6 +27,12 @@ import {
 } from "@mui/material";
 
 function FormikTextField({ label, type = "text", name, showPasswordToggle, showPassword, setShowPassword }) {
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
   return (
     <Field name={name}>
       {({ field, meta }) => (
@@ -38,7 +44,7 @@ function FormikTextField({ label, type = "text", name, showPasswordToggle, showP
           error={meta.touched && Boolean(meta.error)}
           helperText={meta.touched && meta.error}
           InputProps={{
-            endAdornment: showPasswordToggle ? (
+            endAdornment: (showPasswordToggle && isMounted) ? (
               <IconButton
                 onClick={() => setShowPassword(!showPassword)}
                 edge="end"
@@ -66,7 +72,10 @@ export default function LoginPage() {
   const [regSuccess, setRegSuccess] = useState(false);
 
   const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => setIsMounted(true), []);
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleLoginSubmit = async (values) => {
     setLoading(true);
@@ -135,15 +144,13 @@ export default function LoginPage() {
     <Box
       component="main"
       sx={{
-        maxWidth: 600,
         width: "100%",
         minHeight: "100vh",
-        mx: "auto",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        pt: 8,
+        pt: { xs: 10, sm: 12 },
         pb: 4,
       }}
     >
@@ -155,13 +162,14 @@ export default function LoginPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          p: 4,
+          p: { xs: 2, sm: 4 },
+          width: "100%",
+          maxWidth: 500,
         }}
       >
         <Card
           sx={{
             width: "100%",
-            maxWidth: 400,
             boxShadow: 3,
             borderRadius: 2,
             backdropFilter: "blur(10px)",
@@ -256,7 +264,8 @@ export default function LoginPage() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 350,
+                width: { xs: "90%", sm: 350 },
+                maxWidth: 400,
                 bgcolor: "background.paper",
                 borderRadius: 2,
                 boxShadow: 24,
@@ -282,24 +291,26 @@ export default function LoginPage() {
               >
                 {() => (
                   <Form>
-                    <FormikTextField label="Nome de usuário" name="username" />
-                    <FormikTextField
-                      label="Senha"
-                      name="password"
-                      showPasswordToggle={true}
-                      showPassword={regShowPassword}
-                      setShowPassword={setRegShowPassword}
-                    />
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <FormikTextField label="Nome de usuário" name="username" />
+                      <FormikTextField
+                        label="Senha"
+                        name="password"
+                        showPasswordToggle={true}
+                        showPassword={regShowPassword}
+                        setShowPassword={setRegShowPassword}
+                      />
 
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={regLoading}
-                      fullWidth
-                      sx={{ mt: 2 }}
-                    >
-                      {regLoading ? <CircularProgress size={24} /> : "Cadastrar"}
-                    </Button>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        disabled={regLoading}
+                        fullWidth
+                        sx={{ mt: 2 }}
+                      >
+                        {regLoading ? <CircularProgress size={24} /> : "Cadastrar"}
+                      </Button>
+                    </Box>
                   </Form>
                 )}
               </Formik>
