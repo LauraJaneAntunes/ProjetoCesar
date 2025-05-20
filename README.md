@@ -9,11 +9,26 @@
 
 Este projeto explora conceitos e práticas essenciais de **segurança da informação**, com o objetivo de implementar soluções eficazes para proteger dados e sistemas.
 
+## 🛠️ Tecnologias Utilizadas
+
+- **Next.js 15** — Framework React com suporte a SSR, API routes e App Router.  
+- **React 19** — Biblioteca principal para construção de interfaces.  
+- **Material UI (MUI)** — Componentes visuais modernos e acessíveis.  
+- **Tailwind CSS** — Estilização rápida com classes utilitárias.  
+- **Emotion** — CSS-in-JS, utilizado pelo MUI.  
+- **Formik + Yup** — Gerenciamento e validação de formulários.  
+- **Mongoose** — ODM para comunicação com banco MongoDB.  
+- **MongoDB** — Banco de dados NoSQL.  
+- **JWT (jsonwebtoken)** — Geração e verificação de tokens de autenticação.  
+- **bcryptjs** — Hash de senhas para autenticação segura.  
+- **dotenv** — Gerenciamento de variáveis de ambiente.  
+- **CORS** — Permitir acesso entre origens diferentes (útil nas APIs).  
+- **Turbopack** — Bundler moderno experimental utilizado no modo de desenvolvimento.
+
 ## 🗂️ Estrutura do Projeto
 
 - **`/app`**: Diretório principal para rotas no novo sistema de roteamento do Next.js (App Router). Contém páginas e layouts.
 - **`/components`**: Onde ficam os componentes reutilizáveis da interface.
-- **`/hooks`**: Hook personalizado para exibir notificações do tipo toast (mensagens rápidas que aparecem no canto da tela).
 - **`/lib`**: Autenticação, implementação da lógica da cifra de César, conexão com o banco de dados e utilidades genéricas.
 
 PROJETOCESAR/
@@ -40,12 +55,13 @@ PROJETOCESAR/
             ├── auth.js
             ├── caesar.js
             └── db.js
+            └── validationsSchema.js
     ├── favicon.ico
     ├── globals.css
     ├── layout.js
     └── page.js
 ├── .env
-├── .env.example
+├── exemplosdeenv
 ├── .gitignore
 ├── jsconfig.json
 ├── next.config.mjs
@@ -63,19 +79,24 @@ PROJETOCESAR/
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/seu-repo.git
+   git clone https://github.com/LauraJaneAntunes/ProjetoCesar.git
    ```
 2. Instale as dependências:
 
    ```bash
    npm install
    ```
-3. Rode o projeto:
+3. Configure o dotenv (.env):
+
+    ''MONGODB_URI=mongodb://sua_string_de_conexao/nome_do_seu_banco_de_dados''
+    ''JWT_SECRET=seu_password_super_secreto_aqui''
+
+4. Rode o projeto:
 
    ```bash
    npm run dev
    ```
-4. Acesse:
+5. Acesse:
 
    ```
    http://localhost:3000
@@ -87,7 +108,7 @@ PROJETOCESAR/
 
 - 🔐 Criptografia de mensagens com cifra de César
 - 🔑 Sistema de autenticação de usuários
-- 📢 Exibição de mensagens de alerta/toast
+- 📢 Exibição de mensagens de alerta
 - 🧩 Layout responsivo com navegação intuitiva
 - 🗝 Autenticação via JWT
 
@@ -95,8 +116,8 @@ PROJETOCESAR/
 
 ## 🔒 Conceitos de Segurança da Informação
 
-- **Confidencialidade**: uso da cifra de César para proteger dados sensíveis
-- **Autenticação e controle de acesso**: módulo `auth.ts`
+- **Confidencialidade**
+- **Autenticação e controle de acesso**
 - **Boas práticas de desenvolvimento seguro**
 - **Gerenciamento de sessões e dados**
 
@@ -105,4 +126,3 @@ PROJETOCESAR/
 ## 📄 Licença
 
 Este projeto está licenciado sob a **Licença MIT**.
-Sinta-se livre para usar, modificar e compartilhar com atribuição.

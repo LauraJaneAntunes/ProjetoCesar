@@ -1,0 +1,7 @@
+# 1º Renomeie este arquivo para .env
+# 2º Copie sua string de conexão do MongoDB e cole em: mongodb://<sua_string_de_conexao>
+# 3º (opcional) Dê um nome para o banco de dados (após a barra no final da URI)
+# 4º Digite uma senha ou token seguro para autenticação JWT
+
+MONGODB_URI=mongodb://sua_string_de_conexao/nome_do_seu_banco_de_dados
+JWT_SECRET=seu_password_super_secreto_aqui
