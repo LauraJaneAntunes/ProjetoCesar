@@ -14,7 +14,6 @@ Este projeto explora conceitos e práticas essenciais de **segurança da informa
 - **Next.js 15** — Framework React com suporte a SSR, API routes e App Router.  
 - **React 19** — Biblioteca principal para construção de interfaces.  
 - **Material UI (MUI)** — Componentes visuais modernos e acessíveis.  
-- **Tailwind CSS** — Estilização rápida com classes utilitárias.  
 - **Emotion** — CSS-in-JS, utilizado pelo MUI.  
 - **Formik + Yup** — Gerenciamento e validação de formulários.  
 - **Mongoose** — ODM para comunicação com banco MongoDB.  
@@ -22,56 +21,7 @@ Este projeto explora conceitos e práticas essenciais de **segurança da informa
 - **JWT (jsonwebtoken)** — Geração e verificação de tokens de autenticação.  
 - **bcryptjs** — Hash de senhas para autenticação segura.  
 - **dotenv** — Gerenciamento de variáveis de ambiente.  
-- **CORS** — Permitir acesso entre origens diferentes (útil nas APIs).  
-- **Turbopack** — Bundler moderno experimental utilizado no modo de desenvolvimento.
-
-## 🗂️ Estrutura do Projeto
-
-- **`/app`**: Diretório principal para rotas no novo sistema de roteamento do Next.js (App Router). Contém páginas e layouts.
-- **`/components`**: Onde ficam os componentes reutilizáveis da interface.
-- **`/lib`**: Autenticação, implementação da lógica da cifra de César, conexão com o banco de dados e utilidades genéricas.
-
-PROJETOCESAR/
-├── .next/
-├── node_modules/
-├── public/
-└── src/
-    └── app/
-        ├── api/
-        │   └── auth/
-        │       └── register/
-        │           └── route.js
-        │   └── login/
-        │           └── route.js
-        │   └── save-hash/
-        │       └── route.js
-        └── components/
-            └── navbar.js
-        └── decrypt/
-            └── page.js
-        └── encrypt/
-            └── page.js
-        └── libs/
-            ├── auth.js
-            ├── caesar.js
-            └── db.js
-            └── validationsSchema.js
-    ├── favicon.ico
-    ├── globals.css
-    ├── layout.js
-    └── page.js
-├── .env
-├── exemplosdeenv
-├── .gitignore
-├── jsconfig.json
-├── next.config.mjs
-├── package-lock.json
-├── package.json
-├── postcss.config.mjs
-└── README.md
-
-💡 **Dica**: Mantenha seus sistemas seguros e atualizados! 🔒
-
+- **CORS** — Permitir acesso entre origens diferentes (útil nas APIs) para uma implementação futura.  
 ---
 
 ## 🚧 Como rodar o projeto
@@ -126,3 +76,5 @@ PROJETOCESAR/
 ## 📄 Licença
 
 Este projeto está licenciado sob a **Licença MIT**.
+
+💡 **Dica**: Mantenha seus sistemas seguros e atualizados! 🔒

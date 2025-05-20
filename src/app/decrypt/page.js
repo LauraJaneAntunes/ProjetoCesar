@@ -23,7 +23,7 @@ export default function DecryptPage() {
     const token = localStorage.getItem("token");
     const hasUserCookie = document.cookie.includes("user=");
     if (!token && !hasUserCookie) {
-      router.push("/login");
+      router.push("/");
     } else {
       setIsAuthenticated(true);
     }
